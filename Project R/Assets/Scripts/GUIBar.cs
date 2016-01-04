@@ -11,15 +11,15 @@ public class GUIBar : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		playerObj = GameObject.Find("Player").gameObject;
-		playerHealth = playerObj.GetComponent<ObjectSheet>().curr_hp;
-		maxHealth = playerObj.GetComponent<ObjectSheet>().max_hp;
+		playerHealth = playerObj.GetComponent<PlayerSheet>().curr_hp;
+		maxHealth = playerObj.GetComponent<PlayerSheet>().max_hp;
 		setHpBarText();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		playerHealth = playerObj.GetComponent<ObjectSheet>().curr_hp;
-		maxHealth = playerObj.GetComponent<ObjectSheet>().max_hp;
+		playerHealth = playerObj.GetComponent<PlayerSheet>().curr_hp;
+		maxHealth = playerObj.GetComponent<PlayerSheet>().max_hp;
 		setHpBarText();
 	}
 

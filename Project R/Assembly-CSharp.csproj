@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\CombatTextManager.cs" />
      <Compile Include="Assets\Scripts\DamageAction.cs" />
      <Compile Include="Assets\Scripts\Dialogue.cs" />
+     <Compile Include="Assets\Scripts\EnemySpawner.cs" />
      <Compile Include="Assets\Scripts\GUIBar.cs" />
      <Compile Include="Assets\Scripts\GUIBar_Npc.cs" />
      <Compile Include="Assets\Scripts\HealthBar.cs" />

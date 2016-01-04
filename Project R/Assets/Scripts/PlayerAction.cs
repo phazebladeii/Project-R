@@ -45,6 +45,10 @@ public class PlayerAction : MonoBehaviour {
 	void PerformAction (Vector2 direction, int selection){
 		RaycastHit2D hit = Physics2D.Raycast ((Vector2)transform.position + new Vector2 (0, transform.GetComponent<Collider2D>().bounds.size.y / 2), direction, interactDistance, interactLayer);
 		if (hit) {
+			// Show the healthbar
+
+
+			// For Key Actions
 			ActionReciever receiver = hit.transform.GetComponent<ActionReciever> ();
 			if (receiver) {
 				receiver.SendActionMessage(selection);
