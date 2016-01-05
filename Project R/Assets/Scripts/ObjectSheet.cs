@@ -5,12 +5,11 @@ public class ObjectSheet : MonoBehaviour {
 
 	public float max_hp = 100f, curr_hp = 0f;
 	public float min_dam = 5f, max_dam = 12f;
-	public Sprite sprite;
 	public GameObject bar;
+	public int id;
 
 	// Use this for initialization
 	void Start () {
-		sprite = gameObject.GetComponent<SpriteRenderer>().sprite;
 		curr_hp = max_hp;
 		// InvokeRepeating("decreaseHp", 1f, 1f); !! FOR DEBUG !!
 	}

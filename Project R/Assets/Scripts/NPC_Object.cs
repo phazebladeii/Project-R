@@ -32,46 +32,50 @@ public class NPC_Object : MonoBehaviour {
 			if (textChild.text == "enemy") {
 				// Do nothing since it's a killable NPC
 			} else {
-				// print("Interacted with " + child.name);
-				child.SetActive(true); // print(child.name + " has been enabled!");
-				StartCoroutine("SpeechOff"); // print("Started the turn off count!");
+				child.SetActive(true);
+				StartCoroutine("SpeechOff");
 			}
 		}
 
 		if (a == 1 && notKillable == false) {
 
 			// !! Player damage calculation goes here !!
+				
+			float p_min = playerObj.GetComponent<PlayerSheet>().min_dam;
+			float p_max = playerObj.GetComponent<PlayerSheet>().max_dam;
 
-			float playerDamage = Random.Range(playerObj.GetComponent<ObjectSheet>().min_dam, playerObj.GetComponent<ObjectSheet>().max_dam);
-			float damageToApply = Mathf.Round(playerDamage);
-			string playerDam = damageToApply.ToString();
+			float e_min = parentObject.GetComponent<ObjectSheet>().min_dam;
+			float e_max = parentObject.GetComponent<ObjectSheet>().max_dam;
+
+			float p_damage = Mathf.Round(Random.Range(p_min, p_max));
+			string playerDam = p_damage.ToString();
 			bool playerCrit = false;
 
 			// !! Enemy damage calculation goes here !!
-			float enemyDamage = Random.Range(parentObject.GetComponent<ObjectSheet>().min_dam, playerObj.GetComponent<ObjectSheet>().max_dam);
-			float enemyDamageToApply = Mathf.Round(enemyDamage);
-			string enemyDam = enemyDamageToApply.ToString();
+			float e_damage = Mathf.Round(Random.Range(e_min, e_max));
+			string enemyDam = e_damage.ToString();
 			bool enemyCrit = false;
 
 			// !! Change color based on value here !!
 			Color playerColor = Color.white;
 			Color enemyColor = Color.white;
 
-			if (playerDamage >= 27f) {
+			if (p_damage >= 27f) {
 				playerColor = Color.red;
 				playerCrit = true;
 			}
 
-			if (enemyDamage >= 23f) {
+			if (e_damage >= 23f) {
 				enemyColor = Color.red;
 				enemyCrit = true;
 			}
-	
+		
 			// !! Add damage text here !!
 			CombatTextManager.Instance.CreateText(parentObject.transform.position, playerDam, playerColor, playerCrit); // !! You apply YOUR damage to the enemy !!
 			CombatTextManager.Instance.CreateText(playerObj.transform.position, enemyDam, enemyColor, enemyCrit); // !! The enemy applies THEIR damage to you !!
-			gameObject.GetComponent<ObjectSheet>().decreaseHp(damageToApply);
-			playerObj.GetComponent<ObjectSheet>().decreaseHp(enemyDamageToApply);
+			gameObject.GetComponent<ObjectSheet>().decreaseHp(p_damage);
+			playerObj.GetComponent<PlayerSheet>().decreaseHp(e_damage);
+
 		}
 
 	}

@@ -5,11 +5,11 @@ public class EnemySpawner : MonoBehaviour {
 
 	private float[] x_coords = {-3.414f, -0.081f};
 	private float[] y_coords = {-4.818f, -7.63f};
-
 	private float x, y;
 
 	public GameObject enemyPrefab;
 	GameObject enemyClone;
+	private int currId = 0;
 	public float spawnTimes = 15f;
 	public int numberOfMobs = 10; // The max number of mobs this map should handle
 	private int mobCounter = 1;
@@ -30,14 +30,16 @@ public class EnemySpawner : MonoBehaviour {
 	void Spawner() {
 		if (mobCounter <= numberOfMobs) {
 			CreateNewEnemy();
-			print("New ENEMY @ " + x + ", " + y);
+			print("New ENEMY [" + currId + "] @ " + x + ", " + y);
 			mobCounter++;
+			currId++;
 		} else { print("Reached map mob limit"); CancelInvoke("Spawner"); }
 	}
 
 	private void CreateNewEnemy() {
 		Calculate();
 		enemyClone = Instantiate(enemyPrefab, new Vector2(x, y), Quaternion.identity) as GameObject;
+		enemyClone.GetComponent<ObjectSheet>().id = currId;
 
 	}
 
