@@ -3,8 +3,8 @@ using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
 
-	private float[] x_coords = {-3.414f, -0.081f};
-	private float[] y_coords = {-4.818f, -7.63f};
+	public float[] x_coords = {-3.414f, -0.081f};
+	public float[] y_coords = {-4.818f, -7.63f};
 	private float x, y;
 
 	public GameObject enemyPrefab;

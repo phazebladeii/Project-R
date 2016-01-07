@@ -14,7 +14,7 @@ public class NPC_Object : MonoBehaviour {
 	void Start () {
 
 		playerObj = GameObject.Find("Player");
-		parentObject = GameObject.Find(gameObject.name); // Set Parent object
+		parentObject = transform.root.gameObject; // Set Parent object
 		child = parentObject.transform.Find("DialogueBox").gameObject; // Set Child
 		child.SetActive(false); // Dialogue should start invisible
 
@@ -38,44 +38,7 @@ public class NPC_Object : MonoBehaviour {
 		}
 
 		if (a == 1 && notKillable == false) {
-
-			// !! Player damage calculation goes here !!
-				
-			float p_min = playerObj.GetComponent<PlayerSheet>().min_dam;
-			float p_max = playerObj.GetComponent<PlayerSheet>().max_dam;
-
-			float e_min = parentObject.GetComponent<ObjectSheet>().min_dam;
-			float e_max = parentObject.GetComponent<ObjectSheet>().max_dam;
-
-			float p_damage = Mathf.Round(Random.Range(p_min, p_max));
-			string playerDam = p_damage.ToString();
-			bool playerCrit = false;
-
-			// !! Enemy damage calculation goes here !!
-			float e_damage = Mathf.Round(Random.Range(e_min, e_max));
-			string enemyDam = e_damage.ToString();
-			bool enemyCrit = false;
-
-			// !! Change color based on value here !!
-			Color playerColor = Color.white;
-			Color enemyColor = Color.white;
-
-			if (p_damage >= 27f) {
-				playerColor = Color.red;
-				playerCrit = true;
-			}
-
-			if (e_damage >= 23f) {
-				enemyColor = Color.red;
-				enemyCrit = true;
-			}
-		
-			// !! Add damage text here !!
-			CombatTextManager.Instance.CreateText(parentObject.transform.position, playerDam, playerColor, playerCrit); // !! You apply YOUR damage to the enemy !!
-			CombatTextManager.Instance.CreateText(playerObj.transform.position, enemyDam, enemyColor, enemyCrit); // !! The enemy applies THEIR damage to you !!
-			gameObject.GetComponent<ObjectSheet>().decreaseHp(p_damage);
-			playerObj.GetComponent<PlayerSheet>().decreaseHp(e_damage);
-
+			DamageCalculation();
 		}
 
 	}
@@ -85,9 +48,54 @@ public class NPC_Object : MonoBehaviour {
 		child.SetActive(false);
 	}
 
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	void DamageCalculation() {
+
+		// Damage always starts off as NOT crit
+		bool playerCrit = false;
+		bool enemyCrit = false;
+
+		float p_min = playerObj.GetComponent<PlayerSheet>().min_dam;
+		float p_max = playerObj.GetComponent<PlayerSheet>().max_dam;
+		float p_crit_chance = playerObj.GetComponent<PlayerSheet>().critChance;
+		float p_crit_multi = playerObj.GetComponent<PlayerSheet>().critMultiplier;
+		float p_crit_cieling = p_max * (1f - p_crit_chance);
+		float p_damage = Mathf.Round(Random.Range(p_min, p_max));
+
+		float e_min = parentObject.GetComponent<ObjectSheet>().min_dam;
+		float e_max = parentObject.GetComponent<ObjectSheet>().max_dam;
+		float e_crit_chance = parentObject.GetComponent<ObjectSheet>().base_crit;
+		float e_crit_multi = parentObject.GetComponent<ObjectSheet>().crit_multiplier;
+		float e_crit_cieling = e_max * (1f - e_crit_chance);
+		float e_damage = Mathf.Round(Random.Range(e_min, e_max));
+
+		if (p_damage > p_crit_cieling) { p_damage+=Mathf.Round((p_damage * (p_crit_multi * 0.01f))); }
+		if (e_damage > e_crit_cieling) { e_damage+=Mathf.Round((e_damage * (e_crit_multi * 0.01f))); }
+
+		string playerDam = p_damage.ToString();
+		string enemyDam = e_damage.ToString();
+
+
+		// !! Change color based on value here !!
+		Color playerColor = Color.white;
+		Color enemyColor = Color.white;
+
+		if (p_damage >= p_crit_cieling) {
+			playerColor = Color.red;
+			playerCrit = true;
+		}
+
+		if (e_damage >= e_crit_cieling) {
+			enemyColor = Color.red;
+			enemyCrit = true;
+		}
+
+		// !! Add damage text here !!
+		CombatTextManager.Instance.CreateText(parentObject.transform.position, playerDam, playerColor, playerCrit); // !! You apply YOUR damage to the enemy !!
+		CombatTextManager.Instance.CreateText(playerObj.transform.position, enemyDam, enemyColor, enemyCrit); // !! The enemy applies THEIR damage to you !!
+		gameObject.GetComponent<ObjectSheet>().decreaseHp(p_damage);
+		playerObj.GetComponent<PlayerSheet>().decreaseHp(e_damage);
 	}
+	
+
 }

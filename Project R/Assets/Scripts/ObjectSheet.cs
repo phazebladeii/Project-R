@@ -5,6 +5,8 @@ public class ObjectSheet : MonoBehaviour {
 
 	public float max_hp = 100f, curr_hp = 0f;
 	public float min_dam = 5f, max_dam = 12f;
+	public float base_crit = 0.05f; // 5% base crit chance
+	public float crit_multiplier = 1f;
 	public GameObject bar;
 	public int id;
 
@@ -24,7 +26,7 @@ public class ObjectSheet : MonoBehaviour {
 
 		}
 			
-		if (curr_hp < max_hp) { curr_hp += 0.5f; } // !! FOR DEBUG !!
+		// if (curr_hp < max_hp) { curr_hp += 0.5f; } // !! FOR DEBUG !!
 
 
 		setHealthBar(curr_hp / max_hp);
